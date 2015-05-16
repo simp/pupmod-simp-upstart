@@ -1,0 +1,47 @@
+<%
+  # Variable sanity checking
+
+  if @res_col !~ /^\d+$/ then
+    raise Puppet::ParseError.new(
+      "Error: $upstart::res_col must be an integer."
+    )
+  end
+
+  ['prompt','autoswap'].each do |t_var_name|
+    t_var = eval(t_var_name)
+    if not ['yes','no'].include?(t_var) then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::#{t_var} must be one of 'yes' or 'no'."
+      )
+    end
+  end
+-%>
+# This file managed by Puppet
+# Changes will be overwritten on the next Puppet run.
+#
+# color => new RH6.0 bootup
+# verbose => old-style bootup
+# anything else => new style bootup without ANSI colors or positioning
+BOOTUP=<%= @bootup %>
+# column to start "[  OK  ]" label in
+RES_COL=<%= @res_col %>
+# terminal sequence to move to that column. You could change this
+# to something like "tput hpa ${RES_COL}" if your terminal supports it
+MOVE_TO_COL="<%= @move_to_col %>"
+# terminal sequence to set color to a 'success' color (currently: green)
+SETCOLOR_SUCCESS="<%= @setcolor_success %>"
+# terminal sequence to set color to a 'failure' color (currently: red)
+SETCOLOR_FAILURE="<%= @setcolor_failure %>"
+# terminal sequence to set color to a 'warning' color (currently: yellow)
+SETCOLOR_WARNING="<%= @setcolor_warning %>"
+# terminal sequence to reset to the default color.
+SETCOLOR_NORMAL="<%= @setcolor_normal %>"
+# Set to anything other than 'no' to allow hotkey interactive startup...
+PROMPT=<%= @prompt %>
+# Set to 'yes' to allow probing for devices with swap signatures
+AUTOSWAP=<%= @autoswap %>
+# What ttys should gettys be started on?
+ACTIVE_CONSOLES=<%= @active_consoles %>
+# Set to '/sbin/sulogin' to prompt for password on single-user mode
+# Set to '/sbin/sushell' otherwise
+SINGLE=<%= @single %>

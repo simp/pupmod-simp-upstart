@@ -1,0 +1,158 @@
+<%
+  # Variable sanity checking
+
+  # This is used below, so don't mess around with it unless you know what it's
+  # doing!
+  t_process_types = {
+    'main_process' => '',
+    'pre_start' => 'pre-start ',
+    'post_start' => 'post-start ',
+    'pre_stop' => 'pre-stop ',
+    'post_stop' => 'post-stop '
+  }
+
+  t_valid_limits = [
+    'core',
+    'cpu',
+    'data',
+    'fsize',
+    'memlock',
+    'msgqueue',
+    'nice',
+    'nofile',
+    'nproc',
+    'rss',
+    'rtprio',
+    'sigpending',
+    'stack'
+  ]
+
+  t_process_types.keys.each do |t_var_name|
+    t_var = eval("@#{t_var_name}_type")
+    if not ( eval("'@#{t_var}'").eql?('nil') or ['exec','script'].include?(t_var) ) then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::#{t_var_name}_type must be one of 'exec' or 'script'. tvar is #{t_var}"
+      )
+    end
+  end
+
+  if not ( @console.eql?('nil') or ['output','owner'].include?(@console) ) then
+    raise Puppet::ParseError.new(
+      "Error: $upstart::console must be one of 'output' or 'owner'."
+    )
+  end
+
+  if not @sys_limit.eql?('nil') then
+    if not Array(@sys_limit).size == 3 then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::sys_limit must be an arry with [ 'LIMIT', 'SOFT', 'HARD' ] per init(5)."
+      )
+    end
+    if not t_valid_limits.include?(@sys_limit[0]) then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::sys_limit[LIMIT] must be one of: '#{t_valid_limits.join("', '")}'."
+      )
+    end
+    if not @sys_limit[1] =~ /^\d+|unlimited$/ then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::sys_limit[SOFT] must be one of: '<INTEGER>' or 'unlimited'."
+      )
+    end
+    if not @sys_limit[2] =~ /^\d+|unlimited$/ then
+      raise Puppet::ParseError.new(
+        "Error: $upstart::sys_limit[HARD] must be one of: '<INTEGER>' or 'unlimited'."
+      )
+    end
+  end
+
+-%>
+# This file managed by Puppet
+# Changes will be overwritten on the next Puppet run.
+#
+
+<%
+  t_process_types.keys.each do |t_var_name|
+    if not eval("@#{t_var_name}").eql?('nil') then
+
+      if eval("@#{t_var_name}_type") == 'exec'
+-%>
+<%= t_process_types[t_var_name] %>exec <%= eval("@#{t_var_name}") %>
+<%
+      else
+-%>
+<%= t_process_types[t_var_name] %>script
+<%= eval("@#{t_var_name}") %>
+end script
+<%    end -%>
+<%  end -%>
+<% end -%>
+start on <%= @start_on %>
+<% if not @stop_on.eql?('nil') then -%>
+stop on <%= @stop_on %>
+<% end -%>
+<% if not @default_env.eql?('nil') then -%>
+env <%= @default_env %>
+<% end -%>
+<% if not @env_export.eql?('nil') then -%>
+export <%= @env_export %>
+<% end -%>
+<% if @is_task then -%>
+task
+<% end -%>
+<% if @respawn then -%>
+respawn
+<% end -%>
+<% if not @respawn_limit.eql?('nil') then -%>
+respawn limit
+<% end -%>
+<% if not @normal_exit.eql?('nil') then -%>
+normal exit <%= Array(@normal_exit).join(' ') %>
+<% end -%>
+<% if not @instance_name.eql?('nil') then -%>
+instance <%= @instance_name %>
+<% end -%>
+<% if not @description.eql?('nil') then -%>
+description "<%= @description %>"
+<% end -%>
+<% if not @author.eql?('nil') then -%>
+author "<%= @author %>"
+<% end -%>
+<% if not @doc_version.eql?('nil') then -%>
+version "<%= @doc_version %>"
+<% end -%>
+<% if not @emits.eql?('nil') then -%>
+emits <%= Array(@emits).join(' ') %>
+<% end -%>
+<% if not @console.eql?('nil') then -%>
+console <%= @console %>
+<% end -%>
+<% if not @umask.eql?('nil') then -%>
+umask <%= @umask %>
+<% end -%>
+<% if not @nice.eql?('nil') then -%>
+nice <%= @nice %>
+<% end -%>
+<% if not @oom.eql?('nil') then -%>
+oom <%= @oom %>
+<% end -%>
+<% if not @chroot.eql?('nil') then -%>
+chroot <%= @chroot %>
+<% end -%>
+<% if not @chdir.eql?('nil') then -%>
+chdir <%= @chdir %>
+<% end -%>
+<% if not @sys_limit.eql?('nil') then -%>
+limit <%= Array(@sys_limit).join(' ') %>
+<% end -%>
+<% if not @kill_timeout.eql?('nil') then -%>
+kill timeout <%= @kill_timeout %>
+<% end -%>
+<% if @expect_stop then -%>
+expect stop
+<% end -%>
+<% if @expect_daemon then -%>
+expect daemon
+<% end -%>
+<% if @expect_fork then -%>
+expect fork
+<% end -%>
