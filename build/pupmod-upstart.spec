@@ -11,7 +11,7 @@ Buildarch: noarch
 Requires: simp-bootstrap >= 4.2.0
 Obsoletes: pupmod-upstart-test
 
-Prefix:"/etc/puppet/environments/simp/modules"
+Prefix: /etc/puppet/environments/simp/modules
 
 %description
 This Puppet module manages the upstart daemon introduced in RHEL6.
@@ -38,8 +38,8 @@ mkdir -p %{buildroot}/usr/share/simp/tests/modules/upstart
 
 %files
 %defattr(0640,root,puppet,0750)
-/etc/puppet/environments/simp/modules/upstart
-#%exclude /etc/puppet/environments/simp/modules/upstart/tests
+%{prefix}/upstart
+#%exclude %{prefix}/upstart/tests
 
 %post
 # Post installation stuff
@@ -54,7 +54,7 @@ mkdir -p %{buildroot}/usr/share/simp/tests/modules/upstart
 * Wed Apr 16 2014 Trevor Vaughan <tvaughan@onyxpoint.com> - 4.1.0-2
 - Added the ability to disable ctrl-alt-del to the main upstart class.
 
-* Thu Feb 12 2014 Kendall Moore <kmoore@keywcorp.com> - 4.1.0-1
+* Wed Feb 12 2014 Kendall Moore <kmoore@keywcorp.com> - 4.1.0-1
 - Converted all boolean strings into native booleans.
 
 * Fri Jan 03 2014 Nick Markowski <nmarkowski@keywcorp.com> 4.1.0-0
