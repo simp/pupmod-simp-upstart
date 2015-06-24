@@ -114,14 +114,6 @@ define upstart::job (
     $expect_fork = false
 ) {
 
-  file { "/etc/init/${name}.conf":
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0640',
-    content => template('upstart/job.erb')
-  }
-
   validate_string($start_on)
   validate_re($main_process_type,'^(exec|script)$')
   if $main_process != 'nil' { validate_string($main_process) }
@@ -156,4 +148,21 @@ define upstart::job (
   validate_bool($expect_stop)
   validate_bool($expect_daemon)
   validate_bool($expect_fork)
+
+  validate_console($console)
+  validate_sys_limit($sys_limit)
+  validate_process_types($main_process_type)
+  validate_process_types($pre_start_type)
+  validate_process_types($post_start_type)
+  validate_process_types($pre_stop_type)
+  validate_process_types($post_stop_type)
+
+  file { "/etc/init/${name}.conf":
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0640',
+    content => template('upstart/job.erb')
+  }
+
 }

@@ -1,91 +1,68 @@
-<%
-  # Variable sanity checking
-
-  # This is used below, so don't mess around with it unless you know what it's
-  # doing!
-  t_process_types = {
-    'main_process' => '',
-    'pre_start' => 'pre-start ',
-    'post_start' => 'post-start ',
-    'pre_stop' => 'pre-stop ',
-    'post_stop' => 'post-stop '
-  }
-
-  t_valid_limits = [
-    'core',
-    'cpu',
-    'data',
-    'fsize',
-    'memlock',
-    'msgqueue',
-    'nice',
-    'nofile',
-    'nproc',
-    'rss',
-    'rtprio',
-    'sigpending',
-    'stack'
-  ]
-
-  t_process_types.keys.each do |t_var_name|
-    t_var = eval("@#{t_var_name}_type")
-    if not ( eval("'@#{t_var}'").eql?('nil') or ['exec','script'].include?(t_var) ) then
-      raise Puppet::ParseError.new(
-        "Error: $upstart::#{t_var_name}_type must be one of 'exec' or 'script'. tvar is #{t_var}"
-      )
-    end
-  end
-
-  if not ( @console.eql?('nil') or ['output','owner'].include?(@console) ) then
-    raise Puppet::ParseError.new(
-      "Error: $upstart::console must be one of 'output' or 'owner'."
-    )
-  end
-
-  if not @sys_limit.eql?('nil') then
-    if not Array(@sys_limit).size == 3 then
-      raise Puppet::ParseError.new(
-        "Error: $upstart::sys_limit must be an arry with [ 'LIMIT', 'SOFT', 'HARD' ] per init(5)."
-      )
-    end
-    if not t_valid_limits.include?(@sys_limit[0]) then
-      raise Puppet::ParseError.new(
-        "Error: $upstart::sys_limit[LIMIT] must be one of: '#{t_valid_limits.join("', '")}'."
-      )
-    end
-    if not @sys_limit[1] =~ /^\d+|unlimited$/ then
-      raise Puppet::ParseError.new(
-        "Error: $upstart::sys_limit[SOFT] must be one of: '<INTEGER>' or 'unlimited'."
-      )
-    end
-    if not @sys_limit[2] =~ /^\d+|unlimited$/ then
-      raise Puppet::ParseError.new(
-        "Error: $upstart::sys_limit[HARD] must be one of: '<INTEGER>' or 'unlimited'."
-      )
-    end
-  end
-
--%>
 # This file managed by Puppet
 # Changes will be overwritten on the next Puppet run.
 #
+# t_process_types = {
+#   'main_process' => '',
+#   'pre_start'    => 'pre-start ',
+#   'post_start'   => 'post-start ',
+#   'pre_stop'     => 'pre-stop ',
+#   'post_stop'    => 'post-stop'
 
 <%
-  t_process_types.keys.each do |t_var_name|
-    if not eval("@#{t_var_name}").eql?('nil') then
-
-      if eval("@#{t_var_name}_type") == 'exec'
+  if ! @main_process.eql?('nil') then
+    if @main_process_type == 'exec'
 -%>
-<%= t_process_types[t_var_name] %>exec <%= eval("@#{t_var_name}") %>
-<%
-      else
--%>
-<%= t_process_types[t_var_name] %>script
-<%= eval("@#{t_var_name}") %>
+<%=   main_process %>exec <%= @main_process %>
+<%  else -%>
+<%=   main_process %>script
+<%=   main_process %>
 end script
-<%    end -%>
 <%  end -%>
-<% end -%>
+<%end -%>
+<%
+  if ! @pre_start.eql?('nil') then
+    if @pre_start_type == 'exec'
+-%>
+<%=   pre_start %>exec <%= @pre_start %>
+<%  else -%>
+<%=   pre_start %>script
+<%=   pre_start %>
+end script
+<%  end -%>
+<%end -%>
+<%
+  if ! @post_start.eql?('nil') then
+    if @post_start_type == 'exec'
+-%>
+<%=   post_start %>exec <%= @post_start %>
+<%  else -%>
+<%=   post_start %>script
+<%=   post_start %>
+end script
+<%  end -%>
+<%end -%>
+<%
+  if ! @pre_stop.eql?('nil') then
+    if @pre_stop_type == 'exec'
+-%>
+<%=   pre_stop %>exec <%= @pre_stop %>
+<%  else -%>
+<%=   pre_stop %>script
+<%=   pre_stop %>
+end script
+<%  end -%>
+<%end -%>
+<%
+  if ! @post_stop.eql?('nil') then
+    if @post_stop_type == 'exec'
+-%>
+<%=   post_stop %>exec <%= @post_stop %>
+<%  else -%>
+<%=   post_stop %>script
+<%=   post_stop %>
+end script
+<%  end -%>
+<%end -%>
 start on <%= @start_on %>
 <% if not @stop_on.eql?('nil') then -%>
 stop on <%= @stop_on %>

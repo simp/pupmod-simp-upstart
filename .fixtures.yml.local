@@ -1,0 +1,8 @@
+---
+fixtures:
+  symlinks:
+    upstart: "#{source_dir}"
+    auditd: "#{source_dir}/../auditd"
+    common: "#{source_dir}/../common"
+    concat: "#{source_dir}/../concat"
+    stdlib: "#{source_dir}/../stdlib"

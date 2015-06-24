@@ -27,6 +27,8 @@ class upstart (
   $disable_ctrl_alt_del = true
 ) {
 
+  validate_bool($disable_ctrl_alt_del)
+
   auditd::add_rules { 'upstart':
     content => '-w /etc/init/ -p wa -k CFG_upstart'
   }
@@ -40,11 +42,10 @@ class upstart (
 
   if $disable_ctrl_alt_del {
     upstart::job { 'control-alt-delete':
-      main_process  => '/bin/logger -p local6.warning "Ctrl-Alt-Del was pressed"',
-      start_on      => 'control-alt-delete',
-      description   => 'Logs that Ctrl-Alt-Del was pressed without rebooting the system.'
+      main_process => '/bin/logger -p local6.warning "Ctrl-Alt-Del was pressed"',
+      start_on     => 'control-alt-delete',
+      description  => 'Logs that Ctrl-Alt-Del was pressed without rebooting the system.'
     }
   }
 
-  validate_bool($disable_ctrl_alt_del)
 }
