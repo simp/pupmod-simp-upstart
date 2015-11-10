@@ -1,27 +1,61 @@
-#!/usr/bin/rake -T
+require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet/version'
+require 'puppet/vendor/semantic/lib/semantic' unless Puppet.version.to_f < 3.6
+require 'puppet-syntax/tasks/puppet-syntax'
 
-# For playing nice with mock
-File.umask(027)
-
-require 'simp/rake/pkg'
-
+# These gems aren't always present, for instance
+# on Travis with --without development
 begin
-  require 'puppetlabs_spec_helper/rake_tasks'
+  require 'puppet_blacksmith/rake_tasks'
 rescue LoadError
-  puts "== WARNING: Gem puppetlabs_spec_helper not found, spec tests cannot be run! =="
 end
 
 # Lint Material
+require 'puppet-lint/tasks/puppet-lint'
+exclude_paths = [
+  "bundle/**/*",
+  "pkg/**/*",
+  "dist/**/*",
+  "vendor/**/*",
+  "spec/**/*",
+]
+PuppetLint.configuration.ignore_paths = exclude_paths
+PuppetSyntax.exclude_paths = exclude_paths
+
 begin
-  require 'puppet-lint/tasks/puppet-lint'
-
-  PuppetLint.configuration.send("disable_80chars")
-  PuppetLint.configuration.send("disable_variables_not_enclosed")
-  PuppetLint.configuration.send("disable_class_parameter_defaults")
+  require 'simp/rake/pkg'
+  Simp::Rake::Pkg.new( File.dirname( __FILE__ ) ) do | t |
+    t.clean_list << "#{t.base_dir}/spec/fixtures/hieradata/hiera.yaml"
+  end
 rescue LoadError
-  puts "== WARNING: Gem puppet-lint not found, lint tests cannot be run! =="
+  puts "== WARNING: Gem simp-rake-helpers not found, pkg: tasks cannot be run! =="
 end
 
-Simp::Rake::Pkg.new( File.dirname( __FILE__ ) ) do | t |
-  t.clean_list << "#{t.base_dir}/spec/fixtures/hieradata/hiera.yaml"
+begin
+  require 'simp/rake/beaker'
+  Simp::Rake::Beaker.new( File.dirname( __FILE__ ) )
+rescue LoadError
+  # Ignoring this for now since all of these are currently convenience methods.
 end
+
+desc "Run acceptance tests"
+RSpec::Core::RakeTask.new(:acceptance) do |t|
+  t.pattern = 'spec/acceptance'
+end
+
+desc "Populate CONTRIBUTORS file"
+task :contributors do
+  system("git log --format='%aN' | sort -u > CONTRIBUTORS")
+end
+
+task :metadata do
+  sh "metadata-json-lint metadata.json"
+end
+
+desc "Run syntax, lint, and spec tests."
+task :test => [
+  :syntax,
+  :lint,
+  :spec,
+  :metadata,
+]
