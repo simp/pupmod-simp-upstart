@@ -11,7 +11,7 @@ Buildarch: noarch
 Requires: simp-bootstrap >= 4.2.0
 Obsoletes: pupmod-upstart-test
 
-Prefix: /etc/puppet/environments/simp/modules
+Prefix: %{_sysconfdir}/puppet/environments/simp/modules
 
 %description
 This Puppet module manages the upstart daemon introduced in RHEL6.
@@ -39,7 +39,6 @@ mkdir -p %{buildroot}/usr/share/simp/tests/modules/upstart
 %files
 %defattr(0640,root,puppet,0750)
 %{prefix}/upstart
-#%exclude %{prefix}/upstart/tests
 
 %post
 # Post installation stuff
@@ -50,6 +49,8 @@ mkdir -p %{buildroot}/usr/share/simp/tests/modules/upstart
 %changelog
 * Mon Nov 09 2015 Chris Tessmer <chris.tessmer@onypoint.com> - 4.1.0-4
 - migration to simplib and simpcat (lib/ only)
+- Fixed a set of bugs that were introduced to the 'job.erb' template.
+- Code cleanup
 
 * Fri Jan 16 2015 Trevor Vaughan <tvaughan@onyxpoint.com> - 4.1.0-3
 - Changed puppet-server requirement to puppet

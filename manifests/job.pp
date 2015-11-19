@@ -80,35 +80,35 @@
 define upstart::job (
     $start_on,
     $main_process_type = 'exec',
-    $main_process = 'nil',
+    $main_process = '',
     $pre_start_type = 'exec',
-    $pre_start = 'nil',
+    $pre_start = '',
     $post_start_type = 'exec',
-    $post_start = 'nil',
+    $post_start = '',
     $pre_stop_type = 'exec',
-    $pre_stop = 'nil',
+    $pre_stop = '',
     $post_stop_type = 'exec',
-    $post_stop = 'nil',
-    $stop_on = 'nil',
-    $default_env = 'nil',
-    $env_export = 'nil',
+    $post_stop = '',
+    $stop_on = '',
+    $default_env = '',
+    $env_export = '',
     $is_task = false,
     $respawn = false,
-    $respawn_limit = 'nil',
-    $normal_exit = 'nil',
-    $instance_name = 'nil',
-    $description = 'nil',
-    $author = 'nil',
-    $doc_version = 'nil',
-    $emits = 'nil',
-    $console = 'nil',
+    $respawn_limit = '',
+    $normal_exit = '',
+    $instance_name = '',
+    $description = '',
+    $author = '',
+    $doc_version = '',
+    $emits = '',
+    $console = '',
     $umask = '022',
-    $nice = 'nil',
-    $oom = 'nil',
-    $chroot = 'nil',
-    $chdir = 'nil',
-    $sys_limit = 'nil',
-    $kill_timeout = 'nil',
+    $nice = '',
+    $oom = '',
+    $chroot = '',
+    $chdir = '',
+    $sys_limit = '',
+    $kill_timeout = '',
     $expect_stop = false,
     $expect_daemon = false,
     $expect_fork = false
@@ -116,46 +116,50 @@ define upstart::job (
 
   validate_string($start_on)
   validate_re($main_process_type,'^(exec|script)$')
-  if $main_process != 'nil' { validate_string($main_process) }
+  unless empty($main_process) { validate_string($main_process) }
   validate_re($pre_start_type,'^(exec|script)$')
-  if $pre_start != 'nil' { validate_string($pre_start) }
+  unless empty($pre_start) { validate_string($pre_start) }
   validate_re($post_start_type,'^(exec|script)$')
-  if $post_start != 'nil' { validate_string($post_start) }
+  unless empty($post_start) { validate_string($post_start) }
   validate_re($pre_stop_type,'^(exec|script)$')
-  if $pre_stop != 'nil' { validate_string($pre_stop) }
+  unless empty($pre_stop) { validate_string($pre_stop) }
   validate_re($post_stop_type,'^(exec|script)$')
-  if $post_stop != 'nil' { validate_string($post_stop) }
-  if $stop_on != 'nil' { validate_string($stop_on) }
-  if $default_env != 'nil' { validate_string($default_env) }
-  if $env_export != 'nil' { validate_string($env_export) }
+  unless empty($post_stop) { validate_string($post_stop) }
+  unless empty($stop_on) { validate_string($stop_on) }
+  unless empty($default_env) { validate_string($default_env) }
+  unless empty($env_export) { validate_string($env_export) }
   validate_bool($is_task)
   validate_bool($respawn)
-  if $respawn_limit != 'nil' { validate_integer($respawn_limit) }
-  if $normal_exit != 'nil' { validate_string($normal_exit) }
-  if $instance_name != 'nil' { validate_string($instance_name) }
-  if $description != 'nil' { validate_string($description) }
-  if $author != 'nil' { validate_string($author) }
-  if $doc_version != 'nil' { validate_string($doc_version) }
-  if $emits != 'nil' { validate_string($emits) }
-  if $console != 'nil' { validate_string($console) }
+  unless empty($respawn_limit) { validate_integer($respawn_limit) }
+  unless empty($normal_exit) { validate_string($normal_exit) }
+  unless empty($instance_name) { validate_string($instance_name) }
+  unless empty($description) { validate_string($description) }
+  unless empty($author) { validate_string($author) }
+  unless empty($doc_version) { validate_string($doc_version) }
+  unless empty($emits) { validate_string($emits) }
+  unless empty($console) {
+    validate_string($console)
+    validate_console($console)
+  }
   validate_umask($umask)
-  if $nice != 'nil' { validate_string($nice) }
-  if $oom != 'nil' { validate_integer($oom) }
-  if $chroot != 'nil' { validate_string($chroot) }
-  if $chdir != 'nil' { validate_string($chdir) }
-  if $sys_limit != 'nil' { validate_re($sys_limit,'^(core|cpu|data|fsize|memlock|msgqueue|nice|nofile|nproc|rss|rtprio|sigpending|stack)(\s+\d+|\s+unlimited){2}$') }
-  if $kill_timeout != 'nil' { validate_integer($kill_timeout) }
+  unless empty($nice) { validate_string($nice) }
+  unless empty($oom) { validate_integer($oom) }
+  unless empty($chroot) { validate_string($chroot) }
+  unless empty($chdir) { validate_string($chdir) }
+  unless empty($sys_limit) {
+    validate_re($sys_limit,'^(core|cpu|data|fsize|memlock|msgqueue|nice|nofile|nproc|rss|rtprio|sigpending|stack)(\s+\d+|\s+unlimited){2}$')
+    validate_sys_limit($sys_limit)
+  }
+  unless empty($kill_timeout) { validate_integer($kill_timeout) }
   validate_bool($expect_stop)
   validate_bool($expect_daemon)
   validate_bool($expect_fork)
 
-  validate_console($console)
-  validate_sys_limit($sys_limit)
-  validate_process_types($main_process_type)
-  validate_process_types($pre_start_type)
-  validate_process_types($post_start_type)
-  validate_process_types($pre_stop_type)
-  validate_process_types($post_stop_type)
+  unless empty($main_process_type) { validate_process_types($main_process_type) }
+  unless empty($pre_start_type) { validate_process_types($pre_start_type) }
+  unless empty($post_start_type) { validate_process_types($post_start_type) }
+  unless empty($pre_stop_type) { validate_process_types($pre_stop_type) }
+  unless empty($post_stop_type) { validate_process_types($post_stop_type) }
 
   file { "/etc/init/${name}.conf":
     ensure  => 'file',
