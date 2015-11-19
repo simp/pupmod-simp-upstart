@@ -6,6 +6,8 @@ describe 'upstart' do
 
     on_supported_os.each do |os, facts|
       context "on #{os}" do
+    puts "Puppet Version = " + Puppet.version
+
         let(:facts) do
           if ['RedHat','CentOS'].include?(facts[:operatingsystem]) &&
              (facts[:operatingsystemmajrelease].to_s < '7')

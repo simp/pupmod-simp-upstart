@@ -1,135 +1,119 @@
+<%
+  # Variable sanity checking
+
+  # This is used below, so don't mess around with it unless you know what it's
+  # doing!
+  t_process_types = {
+    'main_process' => '',
+    'pre_start' => 'pre-start ',
+    'post_start' => 'post-start ',
+    'pre_stop' => 'pre-stop ',
+    'post_stop' => 'post-stop '
+  }
+
+  t_valid_limits = [
+    'core',
+    'cpu',
+    'data',
+    'fsize',
+    'memlock',
+    'msgqueue',
+    'nice',
+    'nofile',
+    'nproc',
+    'rss',
+    'rtprio',
+    'sigpending',
+    'stack'
+  ]
+-%>
 # This file managed by Puppet
 # Changes will be overwritten on the next Puppet run.
 #
-# t_process_types = {
-#   'main_process' => '',
-#   'pre_start'    => 'pre-start ',
-#   'post_start'   => 'post-start ',
-#   'pre_stop'     => 'pre-stop ',
-#   'post_stop'    => 'post-stop'
 
 <%
-  if ! @main_process.eql?('nil') then
-    if @main_process_type == 'exec'
+  t_process_types.keys.each do |t_var_name|
+    unless eval("@#{t_var_name}").eql?('nil')
+
+      if eval("@#{t_var_name}_type") == 'exec'
 -%>
-<%=   main_process %>exec <%= @main_process %>
-<%  else -%>
-<%=   main_process %>script
-<%=   main_process %>
-end script
-<%  end -%>
-<%end -%>
+<%= t_process_types[t_var_name] %>exec <%= eval("@#{t_var_name}") %>
 <%
-  if ! @pre_start.eql?('nil') then
-    if @pre_start_type == 'exec'
+      else
 -%>
-<%=   pre_start %>exec <%= @pre_start %>
-<%  else -%>
-<%=   pre_start %>script
-<%=   pre_start %>
+<%= t_process_types[t_var_name] %>script
+<%= eval("@#{t_var_name}") %>
 end script
+<%    end -%>
 <%  end -%>
-<%end -%>
-<%
-  if ! @post_start.eql?('nil') then
-    if @post_start_type == 'exec'
--%>
-<%=   post_start %>exec <%= @post_start %>
-<%  else -%>
-<%=   post_start %>script
-<%=   post_start %>
-end script
-<%  end -%>
-<%end -%>
-<%
-  if ! @pre_stop.eql?('nil') then
-    if @pre_stop_type == 'exec'
--%>
-<%=   pre_stop %>exec <%= @pre_stop %>
-<%  else -%>
-<%=   pre_stop %>script
-<%=   pre_stop %>
-end script
-<%  end -%>
-<%end -%>
-<%
-  if ! @post_stop.eql?('nil') then
-    if @post_stop_type == 'exec'
--%>
-<%=   post_stop %>exec <%= @post_stop %>
-<%  else -%>
-<%=   post_stop %>script
-<%=   post_stop %>
-end script
-<%  end -%>
-<%end -%>
+<% end -%>
 start on <%= @start_on %>
-<% if not @stop_on.eql?('nil') then -%>
+<% unless @stop_on.empty? -%>
 stop on <%= @stop_on %>
 <% end -%>
-<% if not @default_env.eql?('nil') then -%>
+<% unless @default_env.empty? -%>
 env <%= @default_env %>
 <% end -%>
-<% if not @env_export.eql?('nil') then -%>
+<% unless @env_export.empty? -%>
 export <%= @env_export %>
 <% end -%>
-<% if @is_task then -%>
+<% if @is_task  -%>
 task
 <% end -%>
-<% if @respawn then -%>
+<% if @respawn  -%>
 respawn
 <% end -%>
-<% if not @respawn_limit.eql?('nil') then -%>
+<% unless @respawn_limit.empty? -%>
 respawn limit
 <% end -%>
-<% if not @normal_exit.eql?('nil') then -%>
+<% unless @normal_exit.empty? -%>
 normal exit <%= Array(@normal_exit).join(' ') %>
 <% end -%>
-<% if not @instance_name.eql?('nil') then -%>
+<% unless @instance_name.empty? -%>
 instance <%= @instance_name %>
 <% end -%>
-<% if not @description.eql?('nil') then -%>
+<% unless @description.empty? -%>
 description "<%= @description %>"
 <% end -%>
-<% if not @author.eql?('nil') then -%>
+<% unless @author.empty? -%>
 author "<%= @author %>"
 <% end -%>
-<% if not @doc_version.eql?('nil') then -%>
+<% unless @doc_version.empty? -%>
 version "<%= @doc_version %>"
 <% end -%>
-<% if not @emits.eql?('nil') then -%>
+<% unless @emits.empty? -%>
 emits <%= Array(@emits).join(' ') %>
 <% end -%>
-<% if not @console.eql?('nil') then -%>
+<% unless @console.empty? -%>
 console <%= @console %>
 <% end -%>
-<% if not @umask.eql?('nil') then -%>
+<% unless @umask.empty? -%>
 umask <%= @umask %>
 <% end -%>
-<% if not @nice.eql?('nil') then -%>
+<% unless @nice.empty? -%>
 nice <%= @nice %>
 <% end -%>
-<% if not @oom.eql?('nil') then -%>
+<% unless @oom.empty? -%>
 oom <%= @oom %>
 <% end -%>
-<% if not @chroot.eql?('nil') then -%>
+<% unless @chroot.empty? -%>
 chroot <%= @chroot %>
 <% end -%>
-<% if not @chdir.eql?('nil') then -%>
+<% unless @chdir.empty? -%>
 chdir <%= @chdir %>
 <% end -%>
-<% if not @sys_limit.eql?('nil') then -%>
+<% unless @sys_limit.empty? -%>
 limit <%= Array(@sys_limit).join(' ') %>
 <% end -%>
-<% if not @kill_timeout.eql?('nil') then -%>
+<% unless @kill_timeout.empty? -%>
 kill timeout <%= @kill_timeout %>
 <% end -%>
-<% if @expect_stop then -%>
+<% if @expect_stop  -%>
 expect stop
 <% end -%>
-<% if @expect_daemon then -%>
+<% if @expect_daemon  -%>
 expect daemon
 <% end -%>
-<% if @expect_fork then -%>
+<% if @expect_fork  -%>
 expect fork
 <% end -%>
