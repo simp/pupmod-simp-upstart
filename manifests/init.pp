@@ -29,6 +29,8 @@ class upstart (
 
   validate_bool($disable_ctrl_alt_del)
 
+  compliance_map()
+
   auditd::add_rules { 'upstart':
     content => '-w /etc/init/ -p wa -k CFG_upstart'
   }

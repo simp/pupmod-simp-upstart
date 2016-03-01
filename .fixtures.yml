@@ -8,5 +8,6 @@ fixtures:
     simplib: "git://github.com/simp/pupmod-simp-simplib"
     simpcat: "git://github.com/simp/pupmod-simp-concat"
     stdlib: "git://github.com/simp/puppetlabs-stdlib"
+    compliance: "https://github.com/trevor-vaughan/pupmod-compliance"
   symlinks:
     upstart: "#{source_dir}"

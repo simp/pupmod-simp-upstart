@@ -1,7 +1,7 @@
 Summary: Upstart Puppet Module
 Name: pupmod-upstart
 Version: 4.1.0
-Release: 4
+Release: 5
 License: Apache License, Version 2.0
 Group: Applications/System
 Source: %{name}-%{version}-%{release}.tar.gz
@@ -10,6 +10,7 @@ Requires: puppet >= 3.3.0
 Buildarch: noarch
 Requires: simp-bootstrap >= 4.2.0
 Obsoletes: pupmod-upstart-test
+Requires: pupmod-onyxpoint-compliance_markup
 
 Prefix: %{_sysconfdir}/puppet/environments/simp/modules
 
@@ -47,6 +48,9 @@ mkdir -p %{buildroot}/usr/share/simp/tests/modules/upstart
 # Post uninitall stuff
 
 %changelog
+* Tue Mar 01 2016 Ralph Wright <ralph.wright@onyxpoint.com> - 4.1.0-5
+- Added compliance function support
+
 * Mon Nov 09 2015 Chris Tessmer <chris.tessmer@onypoint.com> - 4.1.0-4
 - migration to simplib and simpcat (lib/ only)
 - Fixed a set of bugs that were introduced to the 'job.erb' template.
