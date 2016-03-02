@@ -7,7 +7,7 @@ describe 'upstart::job' do
   let(:params) { {:start_on => 'control-alt-delete'} }
 
   it do
-    should contain_file('/etc/init/control-alt-delete.conf').with({
+    is_expected.to contain_file('/etc/init/control-alt-delete.conf').with({
       'ensure'  => 'file',
       'owner'   => 'root',
       'group'   => 'root',

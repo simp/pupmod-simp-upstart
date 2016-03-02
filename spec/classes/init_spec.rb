@@ -24,15 +24,15 @@ describe 'upstart' do
           facts
         end
 
-        it { should create_class('upstart') }
+        it { is_expected.to create_class('upstart') }
         it do
-          should contain_auditd__add_rules('upstart').with({
+          is_expected.to contain_auditd__add_rules('upstart').with({
             'content' => '-w /etc/init/ -p wa -k CFG_upstart'
           })
         end
       
         it do
-          should contain_file('/etc/init').with({
+          is_expected.to contain_file('/etc/init').with({
             'ensure' => 'directory',
             'owner' => 'root',
             'group' => 'root',
