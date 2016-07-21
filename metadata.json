@@ -10,15 +10,15 @@
   "tags": [ "simp" ],
   "dependencies": [
     {
-      "name": "puppetlabs-stdlib",
+      "name": "puppetlabs/stdlib",
       "version_requirement": ">= 4.1.0"
     },
     {
-      "name": "simp-simplib",
+      "name": "simp/simplib",
       "version_requirement": ">= 1.0.0"
     },
     {
-      "name": "onyxpoint/compliance_markup",
+      "name": "simp/compliance_markup",
       "version_requirement": ">= 1.0.0"
     }
   ],
