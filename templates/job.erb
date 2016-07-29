@@ -32,7 +32,7 @@
 #
 
 <%
-  t_process_types.keys.each do |t_var_name|
+  t_process_types.keys.sort.each do |t_var_name|
     unless eval("@#{t_var_name}").eql?('nil')
 
       if eval("@#{t_var_name}_type") == 'exec'

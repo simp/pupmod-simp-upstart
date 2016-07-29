@@ -1,3 +1,6 @@
+* Fri Jul 29 2016 Trevor Vaughan <tvaughan@onyxpoint.com> - 4.1.2-0
+- Fixed an ordering issue in the 'job' ERB template
+
 * Tue Mar 01 2016 Ralph Wright <ralph.wright@onyxpoint.com> - 4.1.0-5
 - Added compliance function support
 
