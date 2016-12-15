@@ -1,8 +1,4 @@
-# == Class: upstart
-#
 # This class allows you to configure the upstart init files.
-#
-# == Parameters
 #
 # Unless otherwise noted, the variables passed to this class set up
 # /etc/sysconfig/init

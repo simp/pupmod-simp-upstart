@@ -8,7 +8,9 @@
   "project_page": "https://github.com/simp/pupmod-simp-upstart",
   "issues_url": "https://simp-project.atlassian.net",
   "tags": [
-    "simp"
+    "simp",
+    "init.d",
+    "init"
   ],
   "dependencies": [
     {
