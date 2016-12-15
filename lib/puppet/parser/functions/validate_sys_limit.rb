@@ -22,22 +22,22 @@ module Puppet::Parser::Functions
     if not sys_limit.eql?('nil') then
       if not Array(sys_limit).size == 3 then
         raise Puppet::ParseError.new(
-          "Error: $upstart::sys_limit must be an arry with [ 'LIMIT', 'SOFT', 'HARD' ] per init(5)."
+          "Error: $upstart::job::sys_limit must be an array with [ 'LIMIT', 'SOFT', 'HARD' ] per init(5)."
         )
       end
       if not t_valid_limits.include?(sys_limit[0]) then
         raise Puppet::ParseError.new(
-          "Error: $upstart::sys_limit[LIMIT] must be one of: '#{t_valid_limits.join("', '")}'."
+          "Error: $upstart::job::sys_limit[LIMIT] must be one of: '#{t_valid_limits.join("', '")}'."
         )
       end
-      if not sys_limit[1] =~ /^\d+|unlimited$/ then
+      if not sys_limit[1] =~ /^((\d+)|unlimited)$/ then
         raise Puppet::ParseError.new(
-          "Error: $upstart::sys_limit[SOFT] must be one of: '<INTEGER>' or 'unlimited'."
+          "Error: $upstart::job::sys_limit[SOFT] must be one of: '<INTEGER>' or 'unlimited'."
         )
       end
-      if not sys_limit[2] =~ /^\d+|unlimited$/ then
+      if not sys_limit[2] =~ /^((\d+)|unlimited)$/ then
         raise Puppet::ParseError.new(
-          "Error: $upstart::sys_limit[HARD] must be one of: '<INTEGER>' or 'unlimited'."
+          "Error: $upstart::job::sys_limit[HARD] must be one of: '<INTEGER>' or 'unlimited'."
         )
       end
     end

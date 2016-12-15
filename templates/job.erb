@@ -10,30 +10,14 @@
     'pre_stop' => 'pre-stop ',
     'post_stop' => 'post-stop '
   }
-
-  t_valid_limits = [
-    'core',
-    'cpu',
-    'data',
-    'fsize',
-    'memlock',
-    'msgqueue',
-    'nice',
-    'nofile',
-    'nproc',
-    'rss',
-    'rtprio',
-    'sigpending',
-    'stack'
-  ]
 -%>
 # This file managed by Puppet
 # Changes will be overwritten on the next Puppet run.
 #
 
 <%
-  t_process_types.keys.sort.each do |t_var_name|
-    unless eval("@#{t_var_name}").eql?('nil')
+  t_process_types.keys.each do |t_var_name|
+    if eval("@#{t_var_name}")
 
       if eval("@#{t_var_name}_type") == 'exec'
 -%>
@@ -42,19 +26,20 @@
       else
 -%>
 <%= t_process_types[t_var_name] %>script
-<%= eval("@#{t_var_name}") %>
+<%= eval("@#{t_var_name}.split(\"\n\").map {|line| '  ' + line}.join(\"\n\")") %>
 end script
+
 <%    end -%>
 <%  end -%>
 <% end -%>
 start on <%= @start_on %>
-<% unless @stop_on.empty? -%>
+<% if @stop_on -%>
 stop on <%= @stop_on %>
 <% end -%>
-<% unless @default_env.empty? -%>
+<% if @default_env -%>
 env <%= @default_env %>
 <% end -%>
-<% unless @env_export.empty? -%>
+<% if @env_export -%>
 export <%= @env_export %>
 <% end -%>
 <% if @is_task  -%>
@@ -63,49 +48,49 @@ task
 <% if @respawn  -%>
 respawn
 <% end -%>
-<% unless @respawn_limit.empty? -%>
-respawn limit
+<% if @respawn_limit -%>
+respawn limit <%= Array(@respawn_limit).join(' ') %>
 <% end -%>
-<% unless @normal_exit.empty? -%>
+<% if @normal_exit -%>
 normal exit <%= Array(@normal_exit).join(' ') %>
 <% end -%>
-<% unless @instance_name.empty? -%>
+<% if @instance_name -%>
 instance <%= @instance_name %>
 <% end -%>
-<% unless @description.empty? -%>
+<% if @description -%>
 description "<%= @description %>"
 <% end -%>
-<% unless @author.empty? -%>
+<% if @author -%>
 author "<%= @author %>"
 <% end -%>
-<% unless @doc_version.empty? -%>
+<% if @doc_version -%>
 version "<%= @doc_version %>"
 <% end -%>
-<% unless @emits.empty? -%>
+<% if @emits -%>
 emits <%= Array(@emits).join(' ') %>
 <% end -%>
-<% unless @console.empty? -%>
+<% if @console -%>
 console <%= @console %>
 <% end -%>
-<% unless @umask.empty? -%>
+<% if @umask -%>
 umask <%= @umask %>
 <% end -%>
-<% unless @nice.empty? -%>
+<% if @nice -%>
 nice <%= @nice %>
 <% end -%>
-<% unless @oom.empty? -%>
+<% if @oom -%>
 oom <%= @oom %>
 <% end -%>
-<% unless @chroot.empty? -%>
+<% if @chroot -%>
 chroot <%= @chroot %>
 <% end -%>
-<% unless @chdir.empty? -%>
+<% if @chdir -%>
 chdir <%= @chdir %>
 <% end -%>
-<% unless @sys_limit.empty? -%>
+<% if @sys_limit -%>
 limit <%= Array(@sys_limit).join(' ') %>
 <% end -%>
-<% unless @kill_timeout.empty? -%>
+<% if @kill_timeout -%>
 kill timeout <%= @kill_timeout %>
 <% end -%>
 <% if @expect_stop  -%>
