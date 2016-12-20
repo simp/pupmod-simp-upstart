@@ -1,165 +1,135 @@
-# == Define: upstart::job
-#
 # This define allows you to manage upstart jobs in /etc/init.
 #
 # See init(5) for more information.
-#
-# == Parameters
-#
 # All variables lacking comments come directly from init(5)
 #
-# [*name*]
-#   The name of the job to be written. Do not use an absolute path!
-#   The result will be /etc/init/${name}.conf
+# @attr name  The name of the job to be written. Do not use an absolute
+#   path! The result will be /etc/init/${name}.conf
 #
-# [*main_process_type]
-#   The type of the main process, may be one of 'exec' or 'script'.
+# @param start_on  The set of events that will cause the job to be
+#   automatically started.
 #
-# [*main_process*]
-#   The content of the main process.
+# @param main_process_type  The type of the main process, may be one of
+#   'exec' or 'script'.
 #
-# [*pre_start_type*]
-#   The type of the pre-start script, may be one of 'exec' or 'script'.
+# @param main_process  The content of the main process.
 #
-# [*pre_start*]
-#   The content of the pre-start stanza
+# @param pre_start_type  The type of the pre-start script, may be one of
+#   'exec' or 'script'.
 #
-# [*post_start_type*]
-#   The type of the post-start script, may be one of 'exec' or 'script'
+# @param pre_start  The content of the pre-start stanza.
 #
-# [*post_start*]
-#   The content of the post-start stanza
+# @param post_start_type  The type of the post-start script, may be one
+#   of 'exec' or 'script'
 #
-# [*pre_stop_type*]
-#   The type of the pre-stop script, may be one of 'exec' or 'script'
+# @param post_start  The content of the post-start stanza.
 #
-# [*pre_stop*]
-#   The content of the pre-stop stanza
+# @param pre_stop_type  The type of the pre-stop script, may be one of
+#   'exec' or 'script'
 #
-# [*post_stop_type*]
-#   The type of the post-stop script, may be one of 'exec' or 'script'
+# @param pre_stop  The content of the pre-stop stanza.
 #
-# [*post_stop*]
-#   The content of the post-stop stanza
+# @param post_stop_type  The type of the post-stop script, may be one of
+#   'exec' or 'script'
 #
-# [*default_env*]
-#   Corresponds to the 'env' keyword.
+# @param post_stop  The content of the post-stop stanza.
 #
-# [*env_export*]
-#   Corresponds to the 'export' keyword.
+# @param stop_on  The set of events that will cause the job to be
+#   automatically stopped.
 #
-# [*is_task*]
-#   Corresponds to the 'task' keyword.
+# @param default_env  Corresponds to the 'env' keyword.
 #
-# [*respawn_limit*]
-#   An array containing two integers corresponding to 'count' and 'interval'
-#   for the 'respawn limit' keyword.
+# @param env_export  Corresponds to the 'export' keyword.
 #
-# [*normal_exit*]
-#   An array of exit statuses and/or signals that indicate tat the job has
-#   terminated successfully.
+# @param is_task  Corresponds to the 'task' keyword.
 #
-# [*instance_name*]
-#   The 'instance' keyword
+# @param respawn_limit  An array containing two integers corresponding to
+#   'count' and 'interval' for the 'respawn limit' keyword.
 #
-# [*doc_version*]
-#   Maps to the 'version' keyword.
+# @param normal_exit  An array of exit statuses and/or signals that
+#   indicate tat the job has terminated successfully.
 #
-# [*emits*]
-#   An array of arbitrary events to emit.
+# @param instance_name  The 'instance' keyword.
 #
-# [*sys_limit*]
-#   Maps to the 'limit' keyword.
-#   Accepts a three item array of values ehat should be 'LIMIT','SOFT', and
-#   'HARD' respectively.
+# @param description The description of the job.
 #
-# == Authors
+# @aparm author The author of the job.
 #
-# * Trevor Vaughan <tvaughan@onyxpoint.com>
+# @param doc_version  The jversion information about the job.  Maps to
+#   the 'version' keyword.
+#
+# @param emits  An array of arbitrary events to emit.
+#
+# @param console Option to connect standard input, output, and error to
+#   /dev/console. Value may be 'output' or 'owner'.
+#
+# @parm umask  The file mode creation mask for the process.
+#
+# @param nice  The process's nice value.
+#
+# @param oom  The OOM killer setting.
+#
+# @param chroot The directory underneath which the process will be run in a chroot.
+#
+# @param chdir  The directory to be the root of the chroot instead of
+#   the root of the filesystem.
+#
+# @param sys_limit  Maps to the 'limit' keyword.  Accepts a three item
+#   array of values that should be 'LIMIT','SOFT', and 'HARD' respectively.
+#
+# @param kill_timeout  The interval between sending the job's main process
+#   the SIGTERM and SIGKILL signals when stopping the running job.
+#
+# @param expect_stop  Maps to 'expect stop'.
+#
+# @param expect_daemon  Maps to 'expect daemon'.
+#
+# @param expect_fork  Maps to 'expect fork'.
+#
+# @author Trevor Vaughan <tvaughan@onyxpoint.com>
 #
 define upstart::job (
-    $start_on,
-    $main_process_type = 'exec',
-    $main_process = '',
-    $pre_start_type = 'exec',
-    $pre_start = '',
-    $post_start_type = 'exec',
-    $post_start = '',
-    $pre_stop_type = 'exec',
-    $pre_stop = '',
-    $post_stop_type = 'exec',
-    $post_stop = '',
-    $stop_on = '',
-    $default_env = '',
-    $env_export = '',
-    $is_task = false,
-    $respawn = false,
-    $respawn_limit = '',
-    $normal_exit = '',
-    $instance_name = '',
-    $description = '',
-    $author = '',
-    $doc_version = '',
-    $emits = '',
-    $console = '',
-    $umask = '022',
-    $nice = '',
-    $oom = '',
-    $chroot = '',
-    $chdir = '',
-    $sys_limit = '',
-    $kill_timeout = '',
-    $expect_stop = false,
-    $expect_daemon = false,
-    $expect_fork = false
+    String                          $start_on,
+    Upstart::Process                $main_process_type = 'exec',
+    Optional[String]                $main_process      = undef,
+    Upstart::Process                $pre_start_type    = 'exec',
+    Optional[String]                $pre_start         = undef,
+    Upstart::Process                $post_start_type   = 'exec',
+    Optional[String]                $post_start        = undef,
+    Upstart::Process                $pre_stop_type     = 'exec',
+    Optional[String]                $pre_stop          = undef,
+    Upstart::Process                $post_stop_type    = 'exec',
+    Optional[String]                $post_stop         = undef,
+    Optional[String]                $stop_on           = undef,
+    Optional[String]                $default_env       = undef,
+    Optional[String]                $env_export        = undef,
+    Boolean                         $is_task           = false,
+    Boolean                         $respawn           = false,
+    Optional[Array[Integer,2,2]]    $respawn_limit     = undef,
+    Optional[Array[String]]         $normal_exit       = undef,
+    Optional[String]                $instance_name     = undef,
+    Optional[String]                $description       = undef,
+    Optional[String]                $author            = undef,
+    Optional[String]                $doc_version       = undef,
+    Optional[Array[String]]         $emits             = undef,
+    Optional[Upstart::Console]      $console           = undef,
+    String                          $umask             = '022',
+    Optional[Integer]               $nice              = undef,
+    Optional[String]                $oom               = undef,
+    Optional[Stdlib::Absolutepath]  $chroot            = undef,
+    Optional[Stdlib::Absolutepath]  $chdir             = undef,
+    Optional[Array[String, 3, 3]]   $sys_limit         = undef,
+    Optional[Integer]               $kill_timeout      = undef,
+    Boolean                         $expect_stop       = false,
+    Boolean                         $expect_daemon     = false,
+    Boolean                         $expect_fork       = false
 ) {
 
-  validate_string($start_on)
-  validate_re($main_process_type,'^(exec|script)$')
-  unless empty($main_process) { validate_string($main_process) }
-  validate_re($pre_start_type,'^(exec|script)$')
-  unless empty($pre_start) { validate_string($pre_start) }
-  validate_re($post_start_type,'^(exec|script)$')
-  unless empty($post_start) { validate_string($post_start) }
-  validate_re($pre_stop_type,'^(exec|script)$')
-  unless empty($pre_stop) { validate_string($pre_stop) }
-  validate_re($post_stop_type,'^(exec|script)$')
-  unless empty($post_stop) { validate_string($post_stop) }
-  unless empty($stop_on) { validate_string($stop_on) }
-  unless empty($default_env) { validate_string($default_env) }
-  unless empty($env_export) { validate_string($env_export) }
-  validate_bool($is_task)
-  validate_bool($respawn)
-  unless empty($respawn_limit) { validate_integer($respawn_limit) }
-  unless empty($normal_exit) { validate_string($normal_exit) }
-  unless empty($instance_name) { validate_string($instance_name) }
-  unless empty($description) { validate_string($description) }
-  unless empty($author) { validate_string($author) }
-  unless empty($doc_version) { validate_string($doc_version) }
-  unless empty($emits) { validate_string($emits) }
-  unless empty($console) {
-    validate_string($console)
-    validate_console($console)
-  }
   validate_umask($umask)
-  unless empty($nice) { validate_string($nice) }
-  unless empty($oom) { validate_integer($oom) }
-  unless empty($chroot) { validate_string($chroot) }
-  unless empty($chdir) { validate_string($chdir) }
-  unless empty($sys_limit) {
-    validate_re($sys_limit,'^(core|cpu|data|fsize|memlock|msgqueue|nice|nofile|nproc|rss|rtprio|sigpending|stack)(\s+\d+|\s+unlimited){2}$')
+  if $sys_limit {
     validate_sys_limit($sys_limit)
   }
-  unless empty($kill_timeout) { validate_integer($kill_timeout) }
-  validate_bool($expect_stop)
-  validate_bool($expect_daemon)
-  validate_bool($expect_fork)
-
-  unless empty($main_process_type) { validate_process_types($main_process_type) }
-  unless empty($pre_start_type) { validate_process_types($pre_start_type) }
-  unless empty($post_start_type) { validate_process_types($post_start_type) }
-  unless empty($pre_stop_type) { validate_process_types($pre_stop_type) }
-  unless empty($post_stop_type) { validate_process_types($post_stop_type) }
+  #TODO add type for oom which can be number from -16 to 14 OR 'never'
 
   file { "/etc/init/${name}.conf":
     ensure  => 'file',

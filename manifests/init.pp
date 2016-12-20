@@ -1,8 +1,4 @@
-# == Class: upstart
-#
 # This class allows you to configure the upstart init files.
-#
-# == Parameters
 #
 # Unless otherwise noted, the variables passed to this class set up
 # /etc/sysconfig/init
@@ -13,25 +9,25 @@
 #
 # See init(8) for more information.
 #
-# [*disable_ctrl_alt_del*]
-# Type: Boolean
-# Default: true
+# @param auditd
+#   If true, includes SIMP's ::auditd class and then adds upstart audit rule
+#
+# @param disable_ctrl_alt_del
 #   If true, do not restart the system when ctrl-alt-del is pressed. Instead,
 #   log the keypress to the system log at level local6.warning.
 #
-# == Authors
-#
-#  * Trevor Vaughan <tvaughan@onyxpoint.com>
+# @author Trevor Vaughan <tvaughan@onyxpoint.com>
 #
 class upstart (
-  $disable_ctrl_alt_del = true
+  Boolean $auditd               = simplib::lookup('simp_options::auditd', { 'default_value' => false }),
+  Boolean $disable_ctrl_alt_del = true
 ) {
 
-  validate_bool($disable_ctrl_alt_del)
-
-
-  auditd::add_rules { 'upstart':
-    content => '-w /etc/init/ -p wa -k CFG_upstart'
+  if $auditd {
+    include '::auditd'
+    auditd::add_rules { 'upstart':
+      content => '-w /etc/init/ -p wa -k CFG_upstart'
+    }
   }
 
   file { '/etc/init':

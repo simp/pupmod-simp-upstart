@@ -1,6 +1,6 @@
 {
   "name": "simp-upstart",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "author": "SIMP Team",
   "summary": "A SIMP puppet module for managing upstart",
   "license": "Apache-2.0",
@@ -8,7 +8,9 @@
   "project_page": "https://github.com/simp/pupmod-simp-upstart",
   "issues_url": "https://simp-project.atlassian.net",
   "tags": [
-    "simp"
+    "simp",
+    "init.d",
+    "init"
   ],
   "dependencies": [
     {
@@ -17,7 +19,7 @@
     },
     {
       "name": "simp/simplib",
-      "version_requirement": ">= 2.0.0 < 3.0.0"
+      "version_requirement": ">= 2.1.0 < 3.0.0"
     }
   ],
   "operatingsystem_support": [

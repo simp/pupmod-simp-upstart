@@ -1,3 +1,10 @@
+* Thu Dec 15 2016 Liz Nemsick <lnemsick.simp@gmail.com> - 6.0.0-0
+- Use simp_options module for global catalysts
+- Use strongly typed parameters
+- Fix bug whereby optional, respawn limit was not properly specified
+  in upstart jobs.
+- Refined upstart::job::sys_limit validation to reject non-integer numbers.
+
 * Mon Nov 21 2016 SIMP-Team <https://groups.google.com/forum/#!forum/simp> - 5.0.0-0
 - Updated module for compliance markup API v1.0.0 compatibility.
 
