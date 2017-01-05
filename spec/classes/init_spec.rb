@@ -36,14 +36,6 @@ describe 'upstart' do
               'mode' => '0644'
             })
           end
-
-          it do
-            is_expected.to contain_upstart__job('control-alt-delete').with({
-              'main_process' => '/bin/logger -p local6.warning "Ctrl-Alt-Del was pressed"',
-              'start_on'     => 'control-alt-delete',
-              'description'  => 'Logs that Ctrl-Alt-Del was pressed without rebooting the system.'
-            })
-          end
         end
 
         context 'with auditing enabled' do
@@ -54,12 +46,6 @@ describe 'upstart' do
               'content' => '-w /etc/init/ -p wa -k CFG_upstart'
             })
           end
-        end
-
-        context 'with disable_ctrl_alt_del false' do
-          let(:params) {{ :disable_ctrl_alt_del => false }}
-          it { is_expected.to compile.with_all_deps }
-          it { is_expected.to_not contain_upstart__job('control-alt-delete') }
         end
       end
     end
