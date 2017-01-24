@@ -26,7 +26,7 @@ describe 'upstart' do
         context 'with default parameters' do
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to create_class('upstart') }
-          it { is_expected.to_not contain_auditd__add_rules('upstart') }
+          it { is_expected.to_not contain_auditd__rule('upstart') }
 
           it do
             is_expected.to contain_file('/etc/init').with({
@@ -42,7 +42,7 @@ describe 'upstart' do
           let(:params) {{ :auditd => true }}
           it { is_expected.to compile.with_all_deps }
           it do
-            is_expected.to contain_auditd__add_rules('upstart').with({
+            is_expected.to contain_auditd__rule('upstart').with({
               'content' => '-w /etc/init/ -p wa -k CFG_upstart'
             })
           end

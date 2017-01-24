@@ -19,7 +19,7 @@ class upstart (
 ) {
   if $auditd {
     include '::auditd'
-    auditd::add_rules { 'upstart':
+    auditd::rule { 'upstart':
       content => '-w /etc/init/ -p wa -k CFG_upstart'
     }
   }
