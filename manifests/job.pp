@@ -127,7 +127,7 @@ define upstart::job (
 
   validate_umask($umask)
   if $sys_limit {
-    validate_sys_limit($sys_limit)
+    upstart::validate_sys_limit($sys_limit)
   }
   #TODO add type for oom which can be number from -16 to 14 OR 'never'
 
