@@ -12,7 +12,7 @@ sudo: false
 cache: bundler
 before_script:
   - bundle update
-bundler_args: --without development system_tests
+bundler_args: --without development system_tests --path .vendor
 before_install: rm Gemfile.lock || true
 script:
   - bundle exec rake test
@@ -33,8 +33,10 @@ matrix:
 
 before_deploy:
   - 'bundle exec rake metadata_lint'
+  - 'bundle exec rake clobber'
+  - 'bundle exec rake spec_clean'
   - "export PUPMOD_METADATA_VERSION=`ruby -r json -e \"puts JSON.parse(File.read('metadata.json')).fetch('version')\"`"
-  - '[[ $TRAVIS_TAG =~ ^${PUPMOD_METADATA_VERSION}$ ]]'
+  - '[[ $TRAVIS_TAG =~ ^simp-${PUPMOD_METADATA_VERSION}$|^${PUPMOD_METADATA_VERSION}$ ]]'
 deploy:
   - provider: puppetforge
     user: simp
@@ -43,11 +45,11 @@ deploy:
     on:
       tags: true
       rvm: 2.1.9
-      condition: '$FORGE_PUBLISH = true'
+      condition: '($SKIP_FORGE_PUBLISH != true) && ($FORGE_PUBLISH = true)'
   - provider: releases
     api_key:
         secure: "YQcvfth/9gmKSb6MBz6dc9Lu/BttX9bmPtnjU+UOuaBIjkkkrzPxUrupWlmFrtVz0KxKi12oUl+2f4EkRcnenvRTwbIreZQ1TynaOt8t7GOh8RhF4/qikAYAy4hyuy4k7foKKsqyJEfKvCG9ChDw2kS2FA6Horsg0GHGpxp93sG0mzJE/g1pCZYIzJCQvKcNZud+ALpg0mR85Z1eaEVGfb6xRvjljJITznh+NlvtsnYwTGwbNnMXbjbBBpgv3oyP63RL0R30pjrNkVgtACJAhiQll0Km7rAxPxtys7WqlysodPGs1VF/mP/PJWWnJFD9AN2VdnlXYDArEywpD09EbAyKihiB1JqbbIJrRwv6919LPa4C7Q9pKgh4RIx6XrGy+jqFAdIAqzyd5HJ580Pl9E2bHJCl3EJKL5MD6UAmPhRXC2TNPHT749avvqoSPBCAr3bYp34cWIuUicoBXwaCLDey1IAPsnMkfVF3V8LFSh+p1WDHm6hSEFIctcefKgQaD28XP38yvQ6wxneFT8GuNALADSXOCi89bDy5OBXfEPywP8mJR3TbvE7FLmlInOyr9gaJLwEdKjZ+FfV/GOXxV/UvoIYeP03w8/BT55FWAX4v+O+esYpE0qi2YFk9BJHxRi8l7pljCsmz+omyxXc8N2QN9QC6lOLRT4pc56yvnic="
     skip_cleanup: true
     on:
       tags: true
-      condition: '$FORGE_PUBLISH = true'
+      condition: '($SKIP_FORGE_PUBLISH != true) && ($FORGE_PUBLISH = true)'
