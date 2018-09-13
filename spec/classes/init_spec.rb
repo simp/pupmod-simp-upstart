@@ -8,7 +8,7 @@ describe 'upstart' do
       context "on #{os}" do
         let(:facts) do
           facts = os_facts.dup
-          if ['RedHat','CentOS'].include?(os_facts[:operatingsystem]) &&
+          if ['RedHat','CentOS','OracleLinux'].include?(os_facts[:operatingsystem]) &&
              (os_facts[:operatingsystemmajrelease].to_s < '7')
 
             facts[:apache_version] = '2.2'
