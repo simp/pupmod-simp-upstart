@@ -1,3 +1,8 @@
+* Thu Sep 13 2018 Nicholas Markowski <nicholas.markowski@onyxpoint.com> - 6.0.3-0
+- Added Puppet 5 and OEL support
+- Dropped support for Hiera v4.  Dependency auditd has dropped support
+  for Hiera v4, causing Puppet 4.7 tests to fail in this module.
+
 * Thu Jun 07 2018 Liz Nemsick <lnemsick.simp@gmail.com> - 6.0.2-0
 - Advance beyond bad changelog entry
 
