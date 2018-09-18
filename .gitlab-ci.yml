@@ -122,7 +122,7 @@ pup5_5-validation:
   <<: *cache_bundler
   <<: *setup_bundler_env
   <<: *validation_checks
- pup5_5-unit:
+pup5_5-unit:
   stage: unit
   tags:
     - docker
