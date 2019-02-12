@@ -113,7 +113,7 @@ define upstart::job (
     Optional[String]                $doc_version       = undef,
     Optional[Array[String]]         $emits             = undef,
     Optional[Upstart::Console]      $console           = undef,
-    String                          $umask             = '022',
+    Simplib::Umask                  $umask             = '022',
     Optional[Integer]               $nice              = undef,
     Optional[String]                $oom               = undef,
     Optional[Stdlib::Absolutepath]  $chroot            = undef,
@@ -125,7 +125,6 @@ define upstart::job (
     Boolean                         $expect_fork       = false
 ) {
 
-  validate_umask($umask)
   if $sys_limit {
     upstart::validate_sys_limit($sys_limit)
   }
