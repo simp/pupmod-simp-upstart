@@ -1,6 +1,8 @@
 * Tue Feb 12 2019 Liz Nemsick <lnemsick.simp@gmail.com> - 6.0.4-0
 - Use Simplib::Umask data type in lieu of validate_umask(),
   a deprecated simplib Puppet 3 function.
+- Update the upper bound of stdlib to < 6.0.0
+- Update a URL in the README.md
 
 * Thu Sep 13 2018 Nicholas Markowski <nicholas.markowski@onyxpoint.com> - 6.0.3-0
 - Added Puppet 5 and OEL support
