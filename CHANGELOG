@@ -1,3 +1,6 @@
+* Wed May 08 2019 Liz Nemsick <lnemsick.simp@gmail.com> - 6.0.5-0
+- Maintenance: removed OBE build/rpm_metadata/requires
+
 * Tue Feb 12 2019 Liz Nemsick <lnemsick.simp@gmail.com> - 6.0.4-0
 - Use Simplib::Umask data type in lieu of validate_umask(),
   a deprecated simplib Puppet 3 function.
